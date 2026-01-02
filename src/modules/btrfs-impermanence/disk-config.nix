@@ -16,7 +16,7 @@
         disko.devices = {
           disk = {
             main = {
-              device = config.mainDisk;
+              device = /dev/vda;
               type = "disk";
               content = {
                 type = "gpt";
