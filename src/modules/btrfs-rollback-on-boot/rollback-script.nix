@@ -54,13 +54,14 @@
 
         # Map over the generated scripts to create the key/value pairs needed for extraBin.
         # extraBin expects { binName = packagePath; }
-        lib.mapAttrs (
-          name: scriptPackage: {
-            # The key (bin name) should be something descriptive, e.g., 'rollback-rootfs'
-            # We extract the path to the executable *inside* the package.
-            "${name}" = "${scriptPackage}/bin/rollback-${name}";
-          }
-        ) cfg.rollbackServiceScripts
+        lib.listToAttrs (
+          lib.mapAttrsToList (
+            name: scriptPackage: {
+              name = name; # Use the service name as the final bin name
+              value = "${scriptPackage}/bin/rollback-${name}"; # The path string
+            }
+          ) cfg.rollbackServiceScripts
+        )
       );
 
     };
