@@ -21,7 +21,7 @@
         btrfsDevice = "/dev/mapper/root_vg-root"; 
         
         # Optional: Control whether snapshots are created (default is true)
-        createSnapshots = true;
+        createSnapshots = false;
         
         # --- Configuration for the Subvolume to be Wiped (The Root) ---
         subvolumeToWipe = {
