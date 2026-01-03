@@ -19,7 +19,7 @@
           # Run on cold boot only, never on resume from hibernation
           unitConfig = {
             ConditionKernelCommandLine = ["!resume="];
-            RequiresMountsFor = ["/dev/mapper/root_vg-root"];
+            RequiresMountsFor = [serviceCfg.btrfsDevice];
           };
           serviceConfig = {
             ExecStart = "${cfg.rollbackServiceScripts.${name}}/bin/rollback-${name}";
