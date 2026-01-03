@@ -106,13 +106,13 @@
     config = lib.mkIf cfg.enable {
       assertions = [
         {
-          assertion = (!config.boot.initrd.systemd.enable);
+          assertion = config.boot.initrd.systemd.enable;
           message = ''
             btrfs-rollback-on-boot requires 'boot.initrd.systemd.enable = true;'
           '';
         }
         {
-          assertion = (!config.services.userborn.enable);
+          assertion = config.services.userborn.enable;
           message = ''
             btrfs-rollback-on-boot requires 'services.userborn.enable = true;'
 
