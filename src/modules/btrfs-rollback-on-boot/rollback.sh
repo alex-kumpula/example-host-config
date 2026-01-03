@@ -90,7 +90,8 @@ if [[ -e $SV_WIPE_MOUNTED_PATH ]]; then
             # the script deletes the existing 'root' subvolume immediately.
 
             # btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
-            delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+            # delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+            btrfs subvolume delete -R $SV_WIPE_MOUNTED_PATH
 
             echo "Deletion successful."
         fi
@@ -98,7 +99,8 @@ if [[ -e $SV_WIPE_MOUNTED_PATH ]]; then
         echo "Snapshot skipped. Deleting old subvolume directly: $SV_WIPE_MOUNTED_PATH"
         
         # btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
-        delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+        # delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+        btrfs subvolume delete -R $SV_WIPE_MOUNTED_PATH
 
         echo "Deletion successful."
     fi
