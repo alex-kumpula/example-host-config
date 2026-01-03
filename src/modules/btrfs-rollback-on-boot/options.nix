@@ -98,6 +98,7 @@
 
       rollbackServiceScripts = lib.mkOption {
         type = lib.types.attrsOf lib.types.package;
+        default = {};
         internal = true;
         description = "Internal map of service names to their generated rollback scripts.";
       };
