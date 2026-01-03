@@ -1,6 +1,6 @@
 { inputs, config, lib, ... }:
 {
-  flake.modules.nixos.btrfs-root-wipe =
+  flake.modules.nixos.btrfs-rollback-on-boot =
   { lib, pkgs, ... }:
   let 
       cfg = config.btrfs-rollback-on-boot;
