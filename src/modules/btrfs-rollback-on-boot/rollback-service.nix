@@ -22,7 +22,7 @@
             RequiresMountsFor = ["/dev/mapper/root_vg-root"];
           };
           serviceConfig = {
-            ExecStart = "${cfg.rollbackServiceScripts.${name}}/bin/rollback";
+            ExecStart = "${cfg.rollbackServiceScripts.${name}}/bin/rollback-${name}";
             StandardOutput = "journal+console";
             StandardError = "journal+console";
             Type = "oneshot";

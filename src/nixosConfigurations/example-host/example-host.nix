@@ -4,7 +4,8 @@
     system = "x86_64-linux";
     modules = with inputs.self.modules.nixos; [ 
       example-host
-      btrfs-root-wipe
+      # btrfs-root-wipe
+      btrfs-rollback-on-boot
     ];
   };
 }

@@ -59,17 +59,14 @@
               default = true;
               description = ''
                 Whether to create snapshots before wiping.
-                Requires that 'subvolumeForPersistence' is set.
               '';
             };
 
             subvolumeForPersistence = lib.mkOption {
               description = ''
                 The subvolume used for persistence.
-                If null, no root snapshots will be created.
               '';
-              default = null;
-              type = lib.types.nullOr lib.types.submodule {
+              type = lib.types.submodule {
                 options = {
 
                   device = lib.mkOption {
@@ -110,7 +107,19 @@
       assertions = [
         {
           assertion = (!config.boot.initrd.systemd.enable);
-          message = "btrfs-rollback-on-boot requires 'boot.initrd.systemd.enable = true;'";
+          message = ''
+            btrfs-rollback-on-boot requires 'boot.initrd.systemd.enable = true;'
+          '';
+        }
+        {
+          assertion = (!config.services.userborn.enable);
+          message = ''
+            btrfs-rollback-on-boot requires 'services.userborn.enable = true;'
+
+            See https://github.com/NixOS/nixpkgs/issues/6481#issuecomment-3381105884 for more info.
+
+            Also see https://github.com/nikstur/userborn to learn more about Userborn.
+          '';
         }
       ];
     };
