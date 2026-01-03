@@ -9,6 +9,8 @@ echo "btrfs-rollback-on-boot: Rolling back $SV_WIPE_NAME..." >/dev/kmsg
 
 # --- Mount Btrfs Volumes ---
 
+echo "THIS IS A TEST"
+
 
 # echo all variables to kmsg
 echo "SV_WIPE_DEVICE = $SV_WIPE_DEVICE" >/dev/kmsg
