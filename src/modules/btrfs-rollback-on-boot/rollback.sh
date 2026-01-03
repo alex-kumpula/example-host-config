@@ -24,7 +24,7 @@ echo "SNAPSHOT_DIR_MNT_PATH = $SNAPSHOT_DIR_MNT_PATH" # eg. /btrfs_rollback_moun
 
 # Create a temporary mount point directory. This is needed because the 
 # script runs in initrd, and the Btrfs volume is not yet mounted.
-mkdir $BTRFS_MNT_POINT
+mkdir -p $BTRFS_MNT_POINT
 
 # Mount the main Btrfs volume (which is on the LVM logical volume 'root_vg-root').
 # This mounts the volume's root, allowing access to all its subvolumes 
