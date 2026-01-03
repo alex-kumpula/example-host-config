@@ -33,6 +33,33 @@ echo "Successfully mounted Btrfs volume."
 
 ## --- Previous Root Subvolume Backup (The "Explosion") ---
 
+# Define a shell function to delete Btrfs subvolumes recursively.
+delete_subvolume_recursively() {
+    
+    echo "Processing for recursive deletion: $1" >/dev/kmsg
+    # Set the Internal Field Separator to newline only.
+    IFS=$'\n'
+
+    # Sanity check: Ensure the path passed as argument ($1) is actually a Btrfs subvolume.
+    if [ $(stat -c %i "$1") -ne 256 ]; then return; fi
+
+    echo "Found nested subvolumes under $1..." >/dev/kmsg
+    # List all subvolumes nested under the current path ($1) and iterate over them.
+    for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+        
+        # Log the recursive GC action.
+        echo "Performing GC on nested subvolume: $i" >/dev/kmsg
+        
+        # Recursively call the function for the nested subvolume.
+        delete_subvolume_recursively "$BTRFS_MNT_POINT/$i"
+    done
+    
+    echo "Deleting subvolume: $1" >/dev/kmsg
+    # Once all nested subvolumes are deleted, delete the current subvolume ($1).
+    btrfs subvolume delete "$1"
+    echo "Deletion of $1 complete." >/dev/kmsg
+}
+
 echo "Checking for existing subvolume to wipe at $SV_WIPE_MOUNTED_PATH..."
 if [[ -e $SV_WIPE_MOUNTED_PATH ]]; then
     
@@ -61,12 +88,18 @@ if [[ -e $SV_WIPE_MOUNTED_PATH ]]; then
             echo "Duplicate timestamp found. Deleting old subvolume: $SV_WIPE_MOUNTED_PATH"
             # If a backup with that timestamp already exists,
             # the script deletes the existing 'root' subvolume immediately.
-            btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
+
+            # btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
+            delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+
             echo "Deletion successful."
         fi
     else
         echo "Snapshot skipped. Deleting old subvolume directly: $SV_WIPE_MOUNTED_PATH"
-        btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
+        
+        # btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
+        delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+
         echo "Deletion successful."
     fi
 else
@@ -79,32 +112,7 @@ echo "Starting Garbage Collection for old snapshots..."
 
 # Recursively Garbage Collect: old_roots older than 30 days
 
-# Define a shell function to delete Btrfs subvolumes recursively.
-delete_subvolume_recursively() {
-    
-    echo "Processing for recursive deletion: $1" >/dev/kmsg
-    # Set the Internal Field Separator to newline only.
-    IFS=$'\n'
 
-    # Sanity check: Ensure the path passed as argument ($1) is actually a Btrfs subvolume.
-    if [ $(stat -c %i "$1") -ne 256 ]; then return; fi
-
-    echo "Found nested subvolumes under $1..." >/dev/kmsg
-    # List all subvolumes nested under the current path ($1) and iterate over them.
-    for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-        
-        # Log the recursive GC action.
-        echo "Performing GC on nested subvolume: $i" >/dev/kmsg
-        
-        # Recursively call the function for the nested subvolume.
-        delete_subvolume_recursively "$BTRFS_MNT_POINT/$i"
-    done
-    
-    echo "Deleting subvolume: $1" >/dev/kmsg
-    # Once all nested subvolumes are deleted, delete the current subvolume ($1).
-    btrfs subvolume delete "$1"
-    echo "Deletion of $1 complete." >/dev/kmsg
-}
 
 
 if $CREATE_SNAPSHOTS; then
