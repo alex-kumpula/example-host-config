@@ -1,15 +1,4 @@
-{ inputs, config, lib, ... }:
-{
-
-
-  # TODO: Make GC a separate service that runs after this one
-  # (but does not require it, in case this service fails for some reason)
-
-
-
-
-  flake.modules.nixos.btrfs-rollback-on-boot =
-  { inputs, config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 {
   # 1. Define configuration access safely at the top level
   flake.modules.nixos.btrfs-rollback-on-boot =
@@ -67,6 +56,4 @@
 
     };
   };
-};
 }
-
