@@ -3,7 +3,7 @@
 # NOTE: Nix expressions (${...}) are NOT used in this file.
 # Variables are passed to this script by Nix.
 
-$LOG_INFO="logger -t btrfs-rollback -p user.info"
+LOG_INFO="logger -t btrfs-rollback -p user.info"
 
 # Log a starting message to the kernel message buffer (kmsg), visible via dmesg.
 echo "btrfs-rollback-on-boot: Rolling back $SV_WIPE_NAME..." >/dev/kmsg
