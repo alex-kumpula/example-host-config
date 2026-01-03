@@ -37,7 +37,7 @@
                 SNAPSHOT_DIR="/snapshots"
                 SNAPSHOT_DIR_MNT_PATH="$BTRFS_MNT_POINT$SV_PERSIST_PATH_ON_DEVICE$SNAPSHOT_DIR"
 
-                CREATE_SNAPSHOTS=${serviceCfg.createSnapshots}
+                CREATE_SNAPSHOTS=${builtins.toString serviceCfg.createSnapshots}
                 
 
               '' + rollbackScriptContent
