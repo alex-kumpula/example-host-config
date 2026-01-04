@@ -23,8 +23,8 @@
           };
           serviceConfig = {
             ExecStart = "${cfg.rollbackServiceScripts.${name}}/bin/rollback-${name}";
-            StandardOutput = "journal+console";
-            StandardError = "journal+console";
+            StandardOutput = "journal";
+            StandardError = "journal";
             Type = "oneshot";
           };
 
