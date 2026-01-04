@@ -14,7 +14,7 @@
         rollbackServiceScripts = lib.mapAttrs' (
           name: serviceCfg: lib.nameValuePair name (
             
-            pkgs.writeShellScriptBin "rollback-${name}" (
+            pkgs.writeShellScriptBin "${name}" (
               ''
                 #
                 # --- Variables interpolated by Nix ---

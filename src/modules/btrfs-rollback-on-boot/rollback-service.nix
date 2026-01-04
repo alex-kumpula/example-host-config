@@ -22,7 +22,7 @@
             RequiresMountsFor = [serviceCfg.btrfsDevice];
           };
           serviceConfig = {
-            ExecStart = "${cfg.rollbackServiceScripts.${name}}/bin/rollback-${name}";
+            ExecStart = "${cfg.rollbackServiceScripts.${name}}/bin/${name}";
             StandardOutput = "journal";
             StandardError = "journal";
             Type = "oneshot";
