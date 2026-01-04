@@ -37,7 +37,7 @@
         createSnapshots = true;
 
         # Optional: Whether old snapshots are deleted or not (default is true)
-        garbageCollectSnapshots = false;
+        garbageCollectSnapshots = true;
 
         # If garbage collection is enabled, how long to keep old snapshots for
         # in number of days. (default is 30)
