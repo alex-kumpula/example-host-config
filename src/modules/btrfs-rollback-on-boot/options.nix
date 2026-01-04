@@ -40,7 +40,10 @@
 
             snapshotOutputPath = lib.mkOption {
               type = lib.types.str;
-              description = "The path to store the snapshots.";
+              description = ''
+                The path to store the snapshots. 
+                Relative to the root of the persistent subvolume.
+              '';
             };
 
             garbageCollectSnapshots = lib.mkOption {

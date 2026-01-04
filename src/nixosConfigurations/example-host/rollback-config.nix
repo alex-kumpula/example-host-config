@@ -19,6 +19,8 @@
         enable = true;
 
         btrfsDevice = "/dev/mapper/root_vg-root"; 
+
+        snapshotOutputPath = "/root-snapshots";
         
         # Optional: Control whether snapshots are created (default is true)
         createSnapshots = true;
