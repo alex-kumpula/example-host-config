@@ -4,7 +4,7 @@
 { inputs, ... }:
 {
   flake.modules.nixos.example-host = 
-  { config, disk ? /dev/vda, ... }: 
+  { disk, ... }: 
   {
     config = {
       disko.devices = {
