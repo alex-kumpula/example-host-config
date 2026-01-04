@@ -6,5 +6,7 @@
       example-host
       cleanslate
     ];
+
+    specialArgs = { disk ? "/dev/vda" }: { inherit disk ; };
   };
 }
