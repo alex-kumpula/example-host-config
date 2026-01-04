@@ -39,7 +39,6 @@
                 
                 # Subvolume for persistence
                 SV_PERSIST_PATH_ON_DEVICE="${serviceCfg.subvolumeForPersistence.path}"
-                SV_PERSIST_NAME="${serviceCfg.subvolumeForPersistence.name}"
                 SV_PERSIST_MOUNTED_PATH="$BTRFS_MNT_POINT$SV_PERSIST_PATH_ON_DEVICE"
 
                 SNAPSHOT_OUTPUT_PATH="${serviceCfg.snapshotOutputPath}"
