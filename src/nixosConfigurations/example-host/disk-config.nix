@@ -4,13 +4,13 @@
 { inputs, ... }:
 {
   flake.modules.nixos.example-host = 
-  { config, ... }: 
+  { config, disk ? /dev/vda, ... }: 
   {
     config = {
       disko.devices = {
         disk = {
           main = {
-            device = "/dev/vda";
+            device = disk;
             type = "disk";
             content = {
               type = "gpt";

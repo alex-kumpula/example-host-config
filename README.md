@@ -2,9 +2,9 @@
 
 This module allows you to define services that wipe and create snaphots of specified paths at boot.
 
-Currently, only BTRFS is supported.
+Currently, only BTRFS filesystems are supported.
 
-This was originally made to be used with Impermanence to wipe and snapshot the root subvolume at boot. However, this can be used in other ways as well.
+This was originally made to be used with [Impermanence](https://github.com/nix-community/impermanence) to wipe and snapshot the root subvolume at boot. However, this can be used in other ways as well.
 
 ## Installation
 WIP
@@ -15,7 +15,9 @@ See the [options](./src/modules/cleanslate/options.nix) for usage.
 ## Try it out
 This repository contains a minimal NixOS configuration output called `example-host` that uses this module with Impermanence to achieve a fresh system each boot. This configuration also has a disko configuration.
 
-To bootstrap `example-host` (recommended to do in a VM)
+To bootstrap `example-host` (recommended to do in a VM), first download a NixOS ISO from the official website, boot into it, and do:
+
+1. Format your device with: 'sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount --flake github:alex-kumpula/xalaynix#alex-vm-001'
 
 
 
