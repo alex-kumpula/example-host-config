@@ -7,7 +7,7 @@
   { ... }: 
   {
     # Enables the whole module
-    btrfs-rollback-on-boot.enable = true;
+    cleanslate.enable = true;
 
     # Needed as the rollback service is an initrd systemd service.
     boot.initrd.systemd.enable = true;
@@ -18,7 +18,7 @@
     services.userborn.enable = true;
 
     # Define rollback services
-    btrfs-rollback-on-boot.services = {
+    cleanslate.services = {
     
       # Define a service to manage the main root subvolume
       "root-wipe-service" = {

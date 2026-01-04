@@ -1,19 +1,19 @@
 { inputs, config, lib, ... }:
 {
-  flake.modules.nixos.btrfs-rollback-on-boot =
+  flake.modules.nixos.cleanslate =
   { lib, pkgs, config, ... }:
   let 
-      cfg = config.btrfs-rollback-on-boot;
+      cfg = config.cleanslate;
   in
   {
-    options.btrfs-rollback-on-boot.enable = lib.mkOption {
+    options.cleanslate.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = "Enable Btrfs root rollback on boot functionality.";
     };
 
 
-    options.btrfs-rollback-on-boot = {
+    options.cleanslate = {
       
       services = lib.mkOption {
         type = lib.types.attrsOf (lib.types.submodule {
@@ -107,13 +107,13 @@
         {
           assertion = config.boot.initrd.systemd.enable;
           message = ''
-            btrfs-rollback-on-boot requires 'boot.initrd.systemd.enable = true;'
+            cleanslate requires 'boot.initrd.systemd.enable = true;'
           '';
         }
       ];
 
       warnings = lib.optional (!config.services.userborn.enable) ''
-        btrfs-rollback-on-boot works best with 'services.userborn.enable = true;'
+        cleanslate works best with 'services.userborn.enable = true;'
 
         Without userborn, user directories inside /home may not be created automatically,
         and may need to be created by the root user.

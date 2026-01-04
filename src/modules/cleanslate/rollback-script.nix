@@ -1,16 +1,16 @@
 { inputs, config, lib, ... }:
 {
-  flake.modules.nixos.btrfs-rollback-on-boot =
+  flake.modules.nixos.cleanslate =
   { lib, pkgs, config, ... }:
   let 
-      cfg = config.btrfs-rollback-on-boot;
+      cfg = config.cleanslate;
       rollbackScriptContent = builtins.readFile ./rollback.sh;
   in
   
   {
     config = lib.mkIf cfg.enable {
 
-      btrfs-rollback-on-boot = {
+      cleanslate = {
         rollbackServiceScripts = lib.mapAttrs' (
           name: serviceCfg: lib.nameValuePair name (
             

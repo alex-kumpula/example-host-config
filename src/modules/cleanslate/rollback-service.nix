@@ -1,9 +1,9 @@
 { inputs, config, lib, ... }:
 {
-  flake.modules.nixos.btrfs-rollback-on-boot =
+  flake.modules.nixos.cleanslate =
   { lib, pkgs, config, ... }:
   let 
-      cfg = config.btrfs-rollback-on-boot;
+      cfg = config.cleanslate;
   in
   {
     config = lib.mkIf cfg.enable {
