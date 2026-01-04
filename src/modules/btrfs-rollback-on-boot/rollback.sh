@@ -1,8 +1,7 @@
 # --- START OF SCRIPT ---
         
 # Log a starting message to the kernel message buffer (kmsg), visible via dmesg.
-echo "Time to 🧨" >/dev/kmsg
-
+echo "$SERVICE_NAME: Starting btrfs rollback..." >/dev/kmsg
 
 echo "BTRFS_DEVICE = $BTRFS_DEVICE" # eg. /dev/mapper/root_vg-root
 echo "BTRFS_MNT_POINT = $BTRFS_MNT_POINT" # eg. /btrfs_rollback_mounts/root-wipe-service_mount
@@ -117,6 +116,6 @@ umount $BTRFS_MNT_POINT
 echo "Unmount successful."
 
 # Log a successful completion message to the kernel message buffer.
-echo "Done with 🧨. Au revoir! Rollback sequence finished." >/dev/kmsg
+echo "$SERVICE_NAME: Finished btrfs rollback sequence!" >/dev/kmsg
 
 # --- END OF SCRIPT ---
