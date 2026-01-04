@@ -17,7 +17,7 @@ This repository contains a minimal NixOS configuration output called `example-ho
 
 To bootstrap `example-host` (recommended to do in a VM), first download a NixOS ISO from the official website, boot into it, and do:
 
-1. Format your device with: 'sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount --flake github:alex-kumpula/xalaynix#alex-vm-001'
+1. Format your device with: `sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount --flake github:alex-kumpula/xalaynix#alex-vm-001`
 
 
 
