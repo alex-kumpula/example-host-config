@@ -38,6 +38,7 @@
                 SNAPSHOT_DIR_MNT_PATH="$BTRFS_MNT_POINT$SV_PERSIST_PATH_ON_DEVICE$SNAPSHOT_DIR"
 
                 CREATE_SNAPSHOTS=${if serviceCfg.createSnapshots then "true" else "false"}
+                SNAPSHOT_RETENTION_NUM_DAYS=${builtins.toString serviceCfg.snapshotRetentionAmountOfDays}
                 
 
               '' + rollbackScriptContent

@@ -18,6 +18,7 @@ echo "SV_PERSIST_MOUNTED_PATH = $SV_PERSIST_MOUNTED_PATH" # eg. /btrfs_rollback_
 echo "SNAPSHOT_DIR_MNT_PATH = $SNAPSHOT_DIR_MNT_PATH" # eg. /btrfs_rollback_mounts/root-wipe-service_mount/persistent/snapshots
 
 echo "CREATE_SNAPSHOTS = $CREATE_SNAPSHOTS"
+echo "SNAPSHOT_RETENTION_NUM_DAYS = $SNAPSHOT_RETENTION_NUM_DAYS"
 
 
 ## --- Prepare to Access Btrfs Volume ---
@@ -32,33 +33,6 @@ mount $BTRFS_DEVICE $BTRFS_MNT_POINT
 echo "Successfully mounted Btrfs volume."
 
 ## --- Previous Root Subvolume Backup (The "Explosion") ---
-
-# Define a shell function to delete Btrfs subvolumes recursively.
-delete_subvolume_recursively() {
-    
-    echo "Processing for recursive deletion: $1" >/dev/kmsg
-    # Set the Internal Field Separator to newline only.
-    IFS=$'\n'
-
-    # Sanity check: Ensure the path passed as argument ($1) is actually a Btrfs subvolume.
-    if [ $(stat -c %i "$1") -ne 256 ]; then return; fi
-
-    echo "Found nested subvolumes under $1..." >/dev/kmsg
-    # List all subvolumes nested under the current path ($1) and iterate over them.
-    for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-        
-        # Log the recursive GC action.
-        echo "Performing GC on nested subvolume: $i" >/dev/kmsg
-        
-        # Recursively call the function for the nested subvolume.
-        delete_subvolume_recursively "$BTRFS_MNT_POINT/$i"
-    done
-    
-    echo "Deleting subvolume: $1" >/dev/kmsg
-    # Once all nested subvolumes are deleted, delete the current subvolume ($1).
-    btrfs subvolume delete "$1"
-    echo "Deletion of $1 complete." >/dev/kmsg
-}
 
 echo "Checking for existing subvolume to wipe at $SV_WIPE_MOUNTED_PATH..."
 if [[ -e $SV_WIPE_MOUNTED_PATH ]]; then
@@ -88,20 +62,14 @@ if [[ -e $SV_WIPE_MOUNTED_PATH ]]; then
             echo "Duplicate timestamp found. Deleting old subvolume: $SV_WIPE_MOUNTED_PATH"
             # If a backup with that timestamp already exists,
             # the script deletes the existing 'root' subvolume immediately.
-
-            # btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
-            # delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
+            # This should be safe because the same timestamp means there
+            # were no changes.
             btrfs subvolume delete -R $SV_WIPE_MOUNTED_PATH
-
             echo "Deletion successful."
         fi
     else
         echo "Snapshot skipped. Deleting old subvolume directly: $SV_WIPE_MOUNTED_PATH"
-        
-        # btrfs subvolume delete $SV_WIPE_MOUNTED_PATH
-        # delete_subvolume_recursively $SV_WIPE_MOUNTED_PATH
         btrfs subvolume delete -R $SV_WIPE_MOUNTED_PATH
-
         echo "Deletion successful."
     fi
 else
@@ -113,10 +81,6 @@ fi
 echo "Starting Garbage Collection for old snapshots..."
 
 # Recursively Garbage Collect: old_roots older than 30 days
-
-
-
-
 if $CREATE_SNAPSHOTS; then
     # Find   the single latest (newest) root backup snapshot
     latest_snapshot=$(find $SNAPSHOT_DIR_MNT_PATH/ -mindepth 1 -maxdepth 1 -type d | sort -r | head -n 1)
@@ -125,12 +89,12 @@ if $CREATE_SNAPSHOTS; then
     if [ -n "$latest_snapshot" ]; then
         echo "Latest snapshot found: $latest_snapshot. Checking for expired backups."
         
-        # Find all directories (snapshots) in 'old_roots' that are older than 30 days.
-        for i in $(find $SNAPSHOT_DIR_MNT_PATH/ -mindepth 1 -maxdepth 1 -mtime +30 | grep -v -e "$latest_snapshot"); do
+        # Find all directories (snapshots) in 'old_roots' that are older than SNAPSHOT_RETENTION_NUM_DAYS days.
+        for i in $(find $SNAPSHOT_DIR_MNT_PATH/ -mindepth 1 -maxdepth 1 -mtime +$SNAPSHOT_RETENTION_NUM_DAYS | grep -v -e "$latest_snapshot"); do
 
             echo "Found expired subvolume for deletion: $i"
-            # Execute the recursive deletion function for the expired, non-latest snapshot.
-            delete_subvolume_recursively "$i"
+            # Recursively delete the expired, non-latest snapshot.
+            btrfs subvolume delete -R "$i"
             echo "Expired subvolume deletion complete."
         done
     else
