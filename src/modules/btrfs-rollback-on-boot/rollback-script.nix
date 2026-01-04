@@ -66,7 +66,7 @@
           lib.mapAttrsToList (
             name: scriptPackage: {
               name = name; # Use the service name as the final bin name
-              value = "${scriptPackage}/bin/rollback-${name}"; # The path string
+              value = "${scriptPackage}/bin/${name}"; # The path string
             }
           ) cfg.rollbackServiceScripts
         )
